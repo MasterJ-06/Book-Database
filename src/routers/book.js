@@ -68,18 +68,49 @@ router.get('/books', auth, async (req, res) => {
 
 //read specific book - done
 router.get('/books/ISBN', async (req, res) => {
-
+ if (req.query.filter === 'Title') {
     try {
-        const book = await Book.findOne({ ISBNNumber: req.query.ISBN })
 
+        const book = await Book.findOne({ Title: req.query.Title })
+    
         if (!book) {
             return res.status(404).send()
         }
-
+    
+        res.setHeader('Access-Control-Allow-Origin', process.env.SERVER)
         res.send(book)
     } catch (e) {
         res.status(500).send()
     }
+ } else if (req.query.filter === 'ISBN') {
+    try {
+
+        const book = await Book.findOne({ ISBNNumber: req.query.ISBN })
+    
+        if (!book) {
+            return res.status(404).send()
+        }
+    
+        res.setHeader('Access-Control-Allow-Origin', process.env.SERVER)
+        res.send(book)
+    } catch (e) {
+        res.status(500).send()
+    }
+ } else if (req.query.filter === 'Author') {
+    try {
+
+        const book = await Book.findOne({ Authors: req.query.Author })
+    
+        if (!book) {
+            return res.status(404).send()
+        }
+    
+        res.setHeader('Access-Control-Allow-Origin', process.env.SERVER)
+        res.send(book)
+    } catch (e) {
+        res.status(500).send()
+    }
+ }
 })
 
 //update book - done
