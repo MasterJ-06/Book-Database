@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 const Book = require('../models/book')
 const auth = require('../middleware/auth')
 const router = new express.Router()
@@ -9,6 +10,7 @@ router.get('/books/loans', async (req, res) => {
     try {
         const books = await Book.find({ Name: req.query.Name })
 
+        res.setHeader('Access-Control-Allow-Origin', process.env.SERVER)
         res.send(books)
     } catch (e) {
         res.status(500).send()
@@ -96,25 +98,13 @@ router.get('/books/ISBN', async (req, res) => {
     } catch (e) {
         res.status(500).send()
     }
- } else if (req.query.filter === 'Author') {
-    try {
-
-        const book = await Book.findOne({ Authors: req.query.Author })
-    
-        if (!book) {
-            return res.status(404).send()
-        }
-    
-        res.setHeader('Access-Control-Allow-Origin', process.env.SERVER)
-        res.send(book)
-    } catch (e) {
-        res.status(500).send()
-    }
  }
 })
 
+router.options('/books/update', cors())
+
 //update book - done
-router.patch('/books', async (req, res) => {
+router.patch('/books/update', cors(), async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['Name', 'Borrowed']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
