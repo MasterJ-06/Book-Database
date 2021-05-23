@@ -6,11 +6,13 @@ const bookRouter = require('./routers/book')
 const app = express()
 const port = process.env.PORT
 
+let host = '127.0.0.1' | 'https://masterj-library-app.herokuapp.com'
+
 app.use(express.json())
 app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', host);
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
