@@ -5,6 +5,25 @@ const auth = require('../middleware/auth')
 const router = new express.Router()
 const ISBNnode = require('node-isbn')
 
+router.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'https://masterj-library-app.herokuapp.com');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE, OPTIONS');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'x-requested-with, content-type, authorization');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', false);
+
+    // Pass to next layer of middleware
+    next();
+});
+
 //list books with a given name - done
 router.get('/books/loans', async (req, res) => {
     try {
