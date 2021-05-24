@@ -25,8 +25,7 @@ router.use(function (req, res, next) {
 });
 
 router.post('/users', async (req, res) => {
-    const json = JSON.parse(req.body)
-    const user = new User(json)
+    const user = new User(req.body)
 
     try {
         await user.save()
