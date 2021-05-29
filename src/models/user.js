@@ -10,15 +10,6 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    age: {
-        type: Number,
-        default: 0,
-        validate(value) {
-            if (value < 0) {
-                throw new Error('Age must be a positive number!')
-            }
-        }
-    },
     password: {
         type: String,
         required: true,
