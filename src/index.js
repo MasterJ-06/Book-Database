@@ -1,6 +1,7 @@
 const express = require('express')
 require('./db/mongoose')
 const userRouter = require('./routers/user')
+const adminRouter = require('./routers/admin')
 const bookRouter = require('./routers/book')
 
 const app = express()
@@ -26,6 +27,7 @@ app.use(function (req, res, next) {
     next();
 });
 app.use(userRouter)
+app.use(adminRouter)
 app.use(bookRouter)
 
 app.listen(port, () => {
