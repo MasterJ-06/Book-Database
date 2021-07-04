@@ -125,7 +125,7 @@ router.options('/books/update', cors())
 //update book - done
 router.patch('/books/update', cors(), async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['Name', 'Borrowed']
+    const allowedUpdates = ['Name', 'Borrowed', 'Status']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
 
     if (!isValidOperation) {
@@ -139,7 +139,20 @@ router.patch('/books/update', cors(), async (req, res) => {
             return res.status(404).send()
         }
         
+        if (req.body.Status == "Borrow") {
+            if (req.body.Borrowed == true) {
+                return res.status(400).send({ error: 'That book has already been borrowed!' })
+            }
+        }
+
+        if (req.body.Status == "Return") {
+            if (req.body.Name !== book.Name) {
+                return res.status(400).send({ error: 'You do not have permission to return that book!' })
+            }
+        }
+
         updates.forEach((update) => book[update] = req.body[update])
+        await Book.updateOne({ ISBNNumber: req.query.ISBNNumber }, { Name: ''})
         await book.save()
 
         res.send(book)
