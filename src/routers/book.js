@@ -77,7 +77,7 @@ router.post('/books', auth,  async (req, res) => {
 })
 
 //read books - done
-router.get('/books', auth, async (req, res) => {
+router.get('/books', async (req, res) => {
     try {
         const books = await Book.find({})
 
