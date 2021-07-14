@@ -140,14 +140,14 @@ router.patch('/books/update', cors(), async (req, res) => {
         }
         
         if (req.body.Status == "Borrow") {
-            if (req.body.Borrowed == true) {
-                return res.status(400).send({ error: 'That book has already been borrowed!' })
+            if (book.Borrowed == true) {
+                return res.status(200).send({ error: 'That book has already been borrowed!' })
             }
         }
 
         if (req.body.Status == "Return") {
             if (req.body.Name !== book.Name) {
-                return res.status(400).send({ error: 'You do not have permission to return that book!' })
+                return res.status(200).send({ error: 'You do not have permission to return that book!' })
             }
         }
 
