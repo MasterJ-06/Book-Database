@@ -65,7 +65,9 @@ router.post('/books', auth,  async (req, res) => {
             PageCount: response.pageCount,
             PrintType: response.printType,
             Categories: response.categories.toString(),
-            Language: response.language
+            Language: response.language,
+            Description: response.description,
+            Image: response.imageLinks.thumbnail
         })
         try {
             await book.save()

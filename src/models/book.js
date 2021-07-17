@@ -47,6 +47,16 @@ const bookSchema = new mongoose.Schema({
         trim: true,
         required: true
     },
+    Description: {
+        type: String,
+        trim: true,
+        required: true
+    },
+    Image: {
+        type: String,
+        trim: true,
+        required: true
+    },
     Borrowed: {
         type: Boolean,
         trim: true,
