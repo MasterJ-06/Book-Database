@@ -2,13 +2,14 @@ const express = require('express')
 const cors = require('cors')
 const Book = require('../models/book')
 const auth = require('../middleware/auth')
+const adminauth = require('../middleware/adminauth')
 const router = new express.Router()
 const ISBNnode = require('node-isbn')
 
 router.use(function (req, res, next) {
 
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'https://masterj-library-app.herokuapp.com');
+    res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:3000');
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE, OPTIONS');
@@ -25,7 +26,7 @@ router.use(function (req, res, next) {
 });
 
 //list books with a given name - done
-router.get('/books/loans', async (req, res) => {
+router.get('/books/loans', auth, async (req, res) => {
     try {
         const books = await Book.find({ Name: req.query.Name })
 
@@ -37,7 +38,7 @@ router.get('/books/loans', async (req, res) => {
 })
 
 //list borrowed books - done
-router.get('/books/borrowed', auth, async (req, res) => {
+router.get('/books/borrowed', adminauth, async (req, res) => {
     try {
         const books = await Book.find({ Borrowed: true})
 
@@ -48,7 +49,7 @@ router.get('/books/borrowed', auth, async (req, res) => {
 })
 
 //create books - done
-router.post('/books', auth,  async (req, res) => {
+router.post('/books', adminauth,  async (req, res) => {
     if (!req.body.ISBN) {
         throw new Error('Please provide an ISBN number')
     }
@@ -64,7 +65,6 @@ router.post('/books', auth,  async (req, res) => {
             ISBNNumber: req.body.ISBN,
             PageCount: response.pageCount,
             PrintType: response.printType,
-            Categories: response.categories.toString(),
             Language: response.language,
             Description: response.description,
             Image: response.imageLinks.thumbnail
@@ -76,6 +76,29 @@ router.post('/books', auth,  async (req, res) => {
             res.status(400).send(e)
         }
     })
+})
+
+//create dvds - done
+router.post('/books/dvds', adminauth,  async (req, res) => {
+    const book = new Book({
+        Title: req.body.title,
+        Authors: req.body.authors,
+        Publisher: req.body.publisher,
+        PublishedDate: req.body.publishedDate,
+        ISBNNumber: req.body.ISBN,
+        PageCount: req.body.pageCount,
+        PrintType: req.body.printType,
+        Categories: req.body.categories,
+        Language: req.body.language,
+        Description: req.body.description,
+        Image: req.body.thumbnail
+    })
+    try {
+        await book.save()
+        res.status(201).send(book)
+    } catch (e) {
+        res.status(400).send(e)
+    }
 })
 
 //read books - done
@@ -125,7 +148,7 @@ router.get('/books/ISBN', async (req, res) => {
 router.options('/books/update', cors())
 
 //update book - done
-router.patch('/books/update', cors(), async (req, res) => {
+router.patch('/books/update', cors(), auth, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['Name', 'Borrowed', 'Status']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -164,7 +187,7 @@ router.patch('/books/update', cors(), async (req, res) => {
 })
 
 //delete book - done
-router.delete('/books/ISBN', auth, async (req, res) => {
+router.delete('/books/ISBN', adminauth, async (req, res) => {
     try {
         const book = await Book.findOneAndDelete({ ISBNNumber: req.query.ISBN })
 

@@ -37,11 +37,6 @@ const bookSchema = new mongoose.Schema({
         trim: true,
         required: true
     },
-    Categories: {
-        type: String,
-        trim: true,
-        required: true
-    },
     Language: {
         type: String,
         trim: true,
