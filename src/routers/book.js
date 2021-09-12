@@ -63,10 +63,8 @@ router.post('/books', adminauth,  async (req, res) => {
         for (let i = 0; i < words.length; i++) {
             words[i] = words[i][0].toUpperCase() + words[i].substr(1);
         }
-
-        words.join(" ");
         const book = new Book({
-            Title: words,
+            Title: words.join(" "),
             Authors: response.authors.toString(),
             Categories: response.categories.toString(),
             Publisher: response.publisher,
@@ -95,10 +93,8 @@ router.post('/books/dvds', adminauth,  async (req, res) => {
     for (let i = 0; i < words.length; i++) {
         words[i] = words[i][0].toUpperCase() + words[i].substr(1);
     }
-
-    words.join(" ");
     const book = new Book({
-        Title: words,
+        Title: words.join(" "),
         Authors: req.body.authors,
         Publisher: req.body.publisher,
         PublishedDate: req.body.publishedDate,
