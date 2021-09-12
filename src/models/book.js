@@ -11,6 +11,11 @@ const bookSchema = new mongoose.Schema({
         trim: true,
         required: true
     },
+    Categories: {
+        type: String,
+        trim: true,
+        required: true
+    },
     Publisher: {
         type: String,
         trim: true,
