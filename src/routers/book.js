@@ -57,8 +57,16 @@ router.post('/books', adminauth,  async (req, res) => {
         if (err) {
             throw new Error('Book not found' + err)
         }
+        const mySentence = response.title;
+        const words = mySentence.split(" ");
+
+        for (let i = 0; i < words.length; i++) {
+            words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+        }
+
+        words.join(" ");
         const book = new Book({
-            Title: response.title,
+            Title: words,
             Authors: response.authors.toString(),
             Categories: response.categories.toString(),
             Publisher: response.publisher,
@@ -81,8 +89,16 @@ router.post('/books', adminauth,  async (req, res) => {
 
 //create dvds - done
 router.post('/books/dvds', adminauth,  async (req, res) => {
+    const mySentence = response.title;
+    const words = mySentence.split(" ");
+
+    for (let i = 0; i < words.length; i++) {
+        words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+    }
+
+    words.join(" ");
     const book = new Book({
-        Title: req.body.title,
+        Title: words,
         Authors: req.body.authors,
         Publisher: req.body.publisher,
         PublishedDate: req.body.publishedDate,
@@ -118,7 +134,16 @@ router.get('/books/ISBN', async (req, res) => {
  if (req.query.filter === 'Title') {
     try {
 
-        const book = await Book.findOne({ Title: req.query.Title })
+        const mySentence = req.query.Title;
+        const words = mySentence.split(" ");
+
+        for (let i = 0; i < words.length; i++) {
+            words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+        }
+
+        words.join(" ");
+
+        const book = await Book.findOne({ Title: words })
     
         if (!book) {
             return res.status(404).send()
