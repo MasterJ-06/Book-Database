@@ -141,9 +141,7 @@ router.get('/books/ISBN', async (req, res) => {
             words[i] = words[i][0].toUpperCase() + words[i].substr(1);
         }
 
-        words.join(" ");
-
-        const book = await Book.findOne({ Title: words })
+        const book = await Book.findOne({ Title: words.join(" ") })
     
         if (!book) {
             return res.status(404).send()
