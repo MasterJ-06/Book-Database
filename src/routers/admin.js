@@ -46,6 +46,16 @@ router.post('/admins/login', async (req, res) => {
     }
 })
 
+router.post('/admins/refresh', async (req, res) => {
+    try {
+        const admin = await Admin.findByJWT(req.body.jwt)
+        const token = await admin.generateAuthRefreshToken()
+        res.send({ admin, token })
+    } catch (e) {
+        res.status(400).send()
+    }
+})
+
 router.post('/admins/logout', adminauth, async (req, res) => {
     try {
         req.admin.tokens = req.admin.tokens.filter((token) => {

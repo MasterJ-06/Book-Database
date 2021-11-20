@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }],
+    refresh: {
+        type: String,
+        required: false
+    },
     avatar: {
         type: String
     }
@@ -40,6 +44,7 @@ userSchema.methods.toJSON = function () {
 
     delete userObject.password
     delete userObject.tokens
+    delete userObject.refresh
     delete userObject.avatar
 
     return userObject
@@ -47,8 +52,20 @@ userSchema.methods.toJSON = function () {
 
 userSchema.methods.generateAuthToken = async function (params) {
     const user = this
-    const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '2h' })
+    const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '15m' })
 
+    user.tokens = user.tokens.concat({ token })
+    user.refresh = token
+    await user.save()
+
+    return token
+}
+
+userSchema.methods.generateAuthRefreshToken = async function (params) {
+    const user = this
+    const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '15m' })
+
+    user.refresh = token
     user.tokens = user.tokens.concat({ token })
     await user.save()
 
@@ -65,6 +82,16 @@ userSchema.statics.findByCredentials =  async (name, password) => {
     const isMatch = await bcrypt.compare(password, user.password)
 
     if (!isMatch) {
+        throw new Error('Unable to login')
+    }
+
+    return user
+}
+
+userSchema.statics.findByJWT =  async (refresh) => {
+    const user = await User.findOne({ refresh })
+
+    if (!user) {
         throw new Error('Unable to login')
     }
 

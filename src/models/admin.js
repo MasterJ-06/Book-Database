@@ -27,6 +27,10 @@ const adminSchema = new mongoose.Schema({
             required: true
         }
     }],
+    refresh: {
+        type: String,
+        required: false
+    },
     avatar: {
         type: Buffer
     }
@@ -40,6 +44,7 @@ adminSchema.methods.toJSON = function () {
 
     delete adminObject.password
     delete adminObject.tokens
+    delete adminObject.refresh
     delete adminObject.avatar
 
     return adminObject
@@ -47,8 +52,20 @@ adminSchema.methods.toJSON = function () {
 
 adminSchema.methods.generateAuthToken = async function (params) {
     const admin = this
-    const token = jwt.sign({ _id: admin._id.toString() }, process.env.JWT_SECRET, { expiresIn: '2h' })
+    const token = jwt.sign({ _id: admin._id.toString() }, process.env.JWT_SECRET, { expiresIn: '15m' })
 
+    admin.tokens = admin.tokens.concat({ token })
+    user.refresh = token
+    await admin.save()
+
+    return token
+}
+
+adminSchema.methods.generateAuthRefreshToken = async function (params) {
+    const admin = this
+    const token = jwt.sign({ _id: admin._id.toString() }, process.env.JWT_SECRET, { expiresIn: '15m' })
+
+    admin.refresh = token
     admin.tokens = admin.tokens.concat({ token })
     await admin.save()
 
@@ -65,6 +82,16 @@ adminSchema.statics.findByCredentials =  async (name, password) => {
     const isMatch = await bcrypt.compare(password, admin.password)
 
     if (!isMatch) {
+        throw new Error('Unable to login')
+    }
+
+    return admin
+}
+
+adminSchema.statics.findByJWT =  async (refresh) => {
+    const admin = await Admin.findOne({ refresh })
+
+    if (!admin) {
         throw new Error('Unable to login')
     }
 
