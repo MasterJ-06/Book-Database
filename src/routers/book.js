@@ -64,7 +64,7 @@ router.post('/books', adminauth,  async (req, res) => {
             words[i] = words[i][0].toUpperCase() + words[i].substr(1);
         }
         var book = null
-        if (response.categories.toString() == undefined) {
+        if (response.categories == undefined) {
             book = new Book({
                 Title: words.join(" "),
                 Authors: response.authors.toString(),
