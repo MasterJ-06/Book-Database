@@ -9,22 +9,18 @@ const bookSchema = new mongoose.Schema({
     Authors: {
         type: String,
         trim: true,
-        required: true
     },
     Categories: {
         type: String,
         trim: true,
-        required: true
     },
     Publisher: {
         type: String,
         trim: true,
-        required: true
     },
     PublishedDate: {
         type: String,
         trim: true,
-        required: true
     },
     ISBNNumber: {
         type: String,
@@ -35,27 +31,22 @@ const bookSchema = new mongoose.Schema({
     PageCount: {
         type: String,
         trim: true,
-        required: true
     },
     PrintType: {
         type: String,
         trim: true,
-        required: true
     },
     Language: {
         type: String,
         trim: true,
-        required: true
     },
     Description: {
         type: String,
         trim: true,
-        required: true
     },
     Image: {
         type: String,
         trim: true,
-        required: true
     },
     Borrowed: {
         type: Boolean,
