@@ -63,19 +63,37 @@ router.post('/books', adminauth,  async (req, res) => {
         for (let i = 0; i < words.length; i++) {
             words[i] = words[i][0].toUpperCase() + words[i].substr(1);
         }
-        const book = new Book({
-            Title: words.join(" "),
-            Authors: response.authors.toString(),
-            Categories: response.categories.toString(),
-            Publisher: response.publisher,
-            PublishedDate: response.publishedDate,
-            ISBNNumber: req.body.ISBN,
-            PageCount: response.pageCount,
-            PrintType: response.printType,
-            Language: response.language,
-            Description: response.description,
-            Image: response.imageLinks.thumbnail
-        })
+        var book = null
+        if (response.categories.toString() == undefined) {
+            book = new Book({
+                Title: words.join(" "),
+                Authors: response.authors.toString(),
+                Categories: "",
+                Publisher: response.publisher,
+                PublishedDate: response.publishedDate,
+                ISBNNumber: req.body.ISBN,
+                PageCount: response.pageCount,
+                PrintType: response.printType,
+                Language: response.language,
+                Description: response.description,
+                Image: ""
+            })
+        } else {
+            book = new Book({
+                Title: words.join(" "),
+                Authors: response.authors.toString(),
+                Categories: response.categories.toString(),
+                Publisher: response.publisher,
+                PublishedDate: response.publishedDate,
+                ISBNNumber: req.body.ISBN,
+                PageCount: response.pageCount,
+                PrintType: response.printType,
+                Language: response.language,
+                Description: response.description,
+                Image: response.imageLinks.thumbnail
+            })
+        }
+        
         try {
             await book.save()
             res.status(201).send(book)
