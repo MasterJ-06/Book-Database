@@ -64,7 +64,7 @@ router.post('/books', adminauth,  async (req, res) => {
             words[i] = words[i][0].toUpperCase() + words[i].substr(1);
         }
         var book = null
-        if (response.categories == undefined) {
+        if (response.categories == undefined || response.imageLinks == undefined) {
             book = new Book({
                 Title: words.join(" "),
                 Authors: response.authors.toString(),
@@ -78,6 +78,12 @@ router.post('/books', adminauth,  async (req, res) => {
                 Description: response.description,
                 Image: ""
             })
+            try {
+                await book.save()
+                res.status(201).send(book)
+            } catch (e) {
+                res.status(400).send(e)
+            }
         } else {
             book = new Book({
                 Title: words.join(" "),
@@ -92,13 +98,12 @@ router.post('/books', adminauth,  async (req, res) => {
                 Description: response.description,
                 Image: response.imageLinks.thumbnail
             })
-        }
-        
-        try {
-            await book.save()
-            res.status(201).send(book)
-        } catch (e) {
-            res.status(400).send(e)
+            try {
+                await book.save()
+                res.status(201).send(book)
+            } catch (e) {
+                res.status(400).send(e)
+            }
         }
     })
 })
