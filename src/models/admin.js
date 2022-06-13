@@ -56,7 +56,7 @@ adminSchema.methods.generateAuthToken = async function (params) {
     const token = jwt.sign({ _id: admin._id.toString() }, process.env.JWT_SECRET, { expiresIn: '15m' })
 
     admin.tokens = admin.tokens.concat({ token })
-    user.refresh = token
+    admin.refresh = token
     await admin.save()
 
     return token
