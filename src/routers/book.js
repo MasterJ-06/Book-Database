@@ -67,16 +67,16 @@ router.post('/books', adminauth,  async (req, res) => {
         if (response.authors == undefined || response.publisher == undefined) {
             book = new Book({
                 Title: words.join(" "),
-                Authors: "",
-                Categories: "",
-                Publisher: "",
+                Authors: "undefined",
+                Categories: "undefined",
+                Publisher: "undefined",
                 PublishedDate: response.publishedDate,
                 ISBNNumber: req.body.ISBN,
                 PageCount: response.pageCount,
                 PrintType: response.printType,
                 Language: response.language,
                 Description: response.description,
-                Image: ""
+                Image: "undefined"
             })
             try {
                 await book.save()
@@ -88,7 +88,7 @@ router.post('/books', adminauth,  async (req, res) => {
             book = new Book({
                 Title: words.join(" "),
                 Authors: response.authors.toString(),
-                Categories: "",
+                Categories: "undefined",
                 Publisher: response.publisher,
                 PublishedDate: response.publishedDate,
                 ISBNNumber: req.body.ISBN,
@@ -96,7 +96,7 @@ router.post('/books', adminauth,  async (req, res) => {
                 PrintType: response.printType,
                 Language: response.language,
                 Description: response.description,
-                Image: ""
+                Image: "undefined"
             })
             try {
                 await book.save()
