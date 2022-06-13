@@ -55,7 +55,7 @@ router.post('/books', adminauth,  async (req, res) => {
     }
     ISBNnode.resolve(req.body.ISBN, { timeout: 30000 }, async function (err, response) {
         if (err) {
-            res.send(req.body.ISBN)
+            console.log(req.body.ISBN)
             throw new Error('Book not found' + err)
         }
         const mySentence = response.title;
