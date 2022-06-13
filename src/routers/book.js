@@ -66,7 +66,7 @@ router.post('/books', adminauth,  async (req, res) => {
         const book = new Book({
             Title: words.join(" "),
             Authors: response.authors.toString(),
-            Categories: response.categories,
+            Categories: response.categories.toString(),
             Publisher: response.publisher,
             PublishedDate: response.publishedDate,
             ISBNNumber: req.body.ISBN,
