@@ -53,9 +53,9 @@ router.post('/books', adminauth,  async (req, res) => {
     if (!req.body.ISBN) {
         throw new Error('Please provide an ISBN number')
     }
-    ISBNnode.resolve(req.body.ISBN, { timeout: 15000 }, async function (err, response) {
+    ISBNnode.resolve(req.body.ISBN, { timeout: 30000 }, async function (err, response) {
         if (err) {
-            res.send('Book not found' + err)
+            throw new Error('Book not found' + err)
         }
         const mySentence = response.title;
         const words = mySentence.split(" ");
