@@ -64,7 +64,27 @@ router.post('/books', adminauth,  async (req, res) => {
             words[i] = words[i][0].toUpperCase() + words[i].substr(1);
         }
         var book = null
-        if (response.categories == undefined || response.imageLinks == undefined) {
+        if (response.authors == undefined || response.publisher == undefined) {
+            book = new Book({
+                Title: words.join(" "),
+                Authors: "",
+                Categories: "",
+                Publisher: "",
+                PublishedDate: response.publishedDate,
+                ISBNNumber: req.body.ISBN,
+                PageCount: response.pageCount,
+                PrintType: response.printType,
+                Language: response.language,
+                Description: response.description,
+                Image: ""
+            })
+            try {
+                await book.save()
+                res.status(201).send(book)
+            } catch (e) {
+                res.status(400).send(e)
+            }
+        } else if (response.categories == undefined || response.imageLinks == undefined) {
             book = new Book({
                 Title: words.join(" "),
                 Authors: response.authors.toString(),
