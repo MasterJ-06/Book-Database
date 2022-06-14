@@ -63,18 +63,63 @@ router.post('/books', adminauth,  async (req, res) => {
         for (let i = 0; i < words.length; i++) {
             words[i] = words[i][0].toUpperCase() + words[i].substr(1);
         }
+        if (response.authors === undefined) {
+            authors = "Unknown"
+        } else {
+            authors = response.authors.toString()
+        }
+        if (response.categories === undefined) {
+            categories = "Unknown"
+        } else {
+            categories = response.categories.toString()
+        }
+        if (response.publisher === undefined) {
+            publisher = "Unknown"
+        } else {
+            publisher = response.publisher.toString()
+        }
+        if (response.publishedDate === undefined) {
+            publishedDate = "Unknown"
+        } else {
+            publishedDate = response.publishedDate.toString()
+        }
+        if (response.pageCount === undefined) {
+            pageCount = "Unknown"
+        } else {
+            pageCount = response.pageCount.toString()
+        }
+        if (response.printType === undefined) {
+            printType = "Unknown"
+        } else {
+            printType = response.printType.toString()
+        }
+        if (response.language === undefined) {
+            language = "Unknown"
+        } else {
+            language = response.language.toString()
+        }
+        if (response.description === undefined) {
+            description = "Unknown"
+        } else {
+            description = response.description.toString()
+        }
+        if (response.imageLinks === undefined) {
+            thumbnail = "Unknown"
+        } else {
+            thumbnail = response.imageLinks.thumbnail
+        }
         book = new Book({
             Title: words.join(" "),
-            Authors: response.authors.toString(),
-            Categories: response.categories.toString(),
-            Publisher: response.publisher,
-            PublishedDate: response.publishedDate,
+            Authors: authors,
+            Categories: categories,
+            Publisher: publisher,
+            PublishedDate: publishedDate,
             ISBNNumber: req.body.ISBN,
-            PageCount: response.pageCount,
-            PrintType: response.printType,
-            Language: response.language,
-            Description: response.description,
-            Image: response.imageLinks.thumbnail
+            PageCount: pageCount,
+            PrintType: printType,
+            Language: language,
+            Description: description,
+            Image: thumbnail
         })
         try {
             await book.save()
