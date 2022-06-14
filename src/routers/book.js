@@ -63,67 +63,24 @@ router.post('/books', adminauth,  async (req, res) => {
         for (let i = 0; i < words.length; i++) {
             words[i] = words[i][0].toUpperCase() + words[i].substr(1);
         }
-        var book = null
-        if (response.authors == undefined || response.publisher == undefined) {
-            book = new Book({
-                Title: words.join(" "),
-                Authors: "undefined",
-                Categories: "undefined",
-                Publisher: "undefined",
-                PublishedDate: response.publishedDate,
-                ISBNNumber: req.body.ISBN,
-                PageCount: response.pageCount,
-                PrintType: response.printType,
-                Language: response.language,
-                Description: response.description,
-                Image: "undefined"
-            })
-            try {
-                await book.save()
-                res.status(201).send(book)
-            } catch (e) {
-                res.status(400).send(e)
-            }
-        } else if (response.categories == undefined || response.imageLinks == undefined) {
-            book = new Book({
-                Title: words.join(" "),
-                Authors: response.authors.toString(),
-                Categories: "undefined",
-                Publisher: response.publisher,
-                PublishedDate: response.publishedDate,
-                ISBNNumber: req.body.ISBN,
-                PageCount: response.pageCount,
-                PrintType: response.printType,
-                Language: response.language,
-                Description: response.description,
-                Image: "undefined"
-            })
-            try {
-                await book.save()
-                res.status(201).send(book)
-            } catch (e) {
-                res.status(400).send(e)
-            }
-        } else {
-            book = new Book({
-                Title: words.join(" "),
-                Authors: response.authors.toString(),
-                Categories: response.categories.toString(),
-                Publisher: response.publisher,
-                PublishedDate: response.publishedDate,
-                ISBNNumber: req.body.ISBN,
-                PageCount: response.pageCount,
-                PrintType: response.printType,
-                Language: response.language,
-                Description: response.description,
-                Image: response.imageLinks.thumbnail
-            })
-            try {
-                await book.save()
-                res.status(201).send(book)
-            } catch (e) {
-                res.status(400).send(e)
-            }
+        book = new Book({
+            Title: words.join(" "),
+            Authors: response.authors.toString(),
+            Categories: response.categories.toString(),
+            Publisher: response.publisher,
+            PublishedDate: response.publishedDate,
+            ISBNNumber: req.body.ISBN,
+            PageCount: response.pageCount,
+            PrintType: response.printType,
+            Language: response.language,
+            Description: response.description,
+            Image: response.imageLinks.thumbnail
+        })
+        try {
+            await book.save()
+            res.status(201).send(book)
+        } catch (e) {
+            res.status(400).send(e)
         }
     })
 })
