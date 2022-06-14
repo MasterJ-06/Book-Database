@@ -50,7 +50,7 @@ router.post('/users/refresh', async (req, res) => {
     try {
         //const user = await User.findByJWT(req.body.jwt)
         //const token = await user.generateAuthRefreshToken()
-        res.send(User.findByJWT(req.body.jwt))
+        res.send(User.findByJWT([req.body.jwt]))
     } catch (e) {
         res.status(400).send()
     }
