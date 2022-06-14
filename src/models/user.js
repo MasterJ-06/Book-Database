@@ -28,10 +28,6 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }],
-    refresh: {
-        type: String,
-        required: false
-    },
     avatar: {
         type: String
     }
@@ -56,7 +52,6 @@ userSchema.methods.generateAuthToken = async function (params) {
     const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '15m' })
 
     user.tokens = user.tokens.concat({ token })
-    user.refresh = token
     await user.save()
 
     return token
@@ -64,13 +59,9 @@ userSchema.methods.generateAuthToken = async function (params) {
 
 userSchema.methods.generateAuthRefreshToken = async function (jsonWebToken) {
     const user = await User.findOne({ jsonWebToken })
-
-    if (!user) {
-        throw new Error('Unable to login')
-    }
+    if (!user) {throw new Error('Unable to login')}
     const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '15m' })
-    console.log(token)
-    user.refresh = token
+    if (!token) {throw new Error('no token was created')}
     user.tokens = user.tokens.concat({ token })
     await user.save()
 
