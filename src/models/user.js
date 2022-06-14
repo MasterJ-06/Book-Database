@@ -57,11 +57,10 @@ userSchema.methods.generateAuthToken = async function (params) {
     return token
 }
 
-userSchema.methods.generateAuthRefreshToken = async function (jsonWebToken) {
-    const user = await User.findOne({ jsonWebToken })
-    if (!user) {throw new Error('Unable to login')}
+userSchema.methods.generateAuthRefreshToken = async function () {
+    const user = this
     const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '15m' })
-    if (!token) {throw new Error('no token was created')}
+
     user.tokens = user.tokens.concat({ token })
     await user.save()
 
