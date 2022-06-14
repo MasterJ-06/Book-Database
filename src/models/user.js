@@ -84,7 +84,7 @@ userSchema.statics.findByCredentials =  async (name, password) => {
 }
 
 userSchema.statics.findByJWT =  async (refresh) => {
-    const user = await User.findOne({ "tokens": refresh })
+    const user = await User.findOne({ "tokens.token.$": refresh })
 
     if (!user) {
         throw new Error('Unable to login')
