@@ -69,7 +69,7 @@ userSchema.methods.generateAuthRefreshToken = async function (jsonWebToken) {
         throw new Error('Unable to login')
     }
     const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '15m' })
-
+    console.log(token)
     user.refresh = token
     user.tokens = user.tokens.concat({ token })
     await user.save()
