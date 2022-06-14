@@ -62,11 +62,10 @@ adminSchema.methods.generateAuthToken = async function (params) {
     return token
 }
 
-adminSchema.methods.generateAuthRefreshToken = async function (params) {
+adminSchema.methods.generateAuthRefreshToken = async function () {
     const admin = this
     const token = jwt.sign({ _id: admin._id.toString() }, process.env.JWT_SECRET, { expiresIn: '15m' })
 
-    admin.refresh = token
     admin.tokens = admin.tokens.concat({ token })
     await admin.save()
 
@@ -89,8 +88,8 @@ adminSchema.statics.findByCredentials =  async (name, password) => {
     return admin
 }
 
-adminSchema.statics.findByJWT =  async (refresh) => {
-    const admin = await Admin.findOne({ refresh })
+adminSchema.statics.findByJWT =  async (name) => {
+    const admin = await Admin.findOne({ name })
 
     if (!admin) {
         throw new Error('Unable to login')

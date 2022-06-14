@@ -46,11 +46,11 @@ router.post('/admins/login', async (req, res) => {
     }
 })
 
-router.post('/admins/refresh', async (req, res) => {
+router.post('/asers/refresh', async (req, res) => {
     try {
-        const admin = await Admin.findByJWT(req.body.jwt)
+        const admin = await Admin.findByJWT(req.body.name)
         const token = await admin.generateAuthRefreshToken()
-        res.send({ admin, token })
+        res.send({ token })
     } catch (e) {
         res.status(400).send()
     }
